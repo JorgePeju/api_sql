@@ -1,69 +1,110 @@
-const {Pool}= require('pg')
-//const { resourceLimits } = require('worker_threads')
+const { Pool } = require('pg')
 
 const pool = new Pool({
-
     host: 'localhost',
     user: 'postgres',
     database: 'blog',
-    password: "admin"
-
+    password: 'admin'
 })
 
 //* ACCEDER A LOS AUTORES POR EMAIL
-const getAuthByEmail= async()=>{
+
+const getAuthorsByEmail = async (email) => {
 
     let client, result;
 
     try {
-        client= await pool.connect()
-        const data = await client.query(`
-        
-        
-                                        `)
 
+        client = await pool.connect()
+        const data = await client.query(queries.getAuthorByEmail, [email]);
+        //* si ponemos $2, $3, impedimos las inyecciones de SQL
+        result = data.rows;
 
     } catch (error) {
-        
 
+        console.log(error)
+        throw error
 
     } finally {
 
-
+        client.release()
 
     }
-     
+
     return result
+
+
 
 }
 
-//* NECESITAREMOS TRAER A TODOS LOS AUTORES
+//*TRAER TODOS LOS AUTORES
+
+const getAllAuthors = async () => {
+
+    let client, result;
+
+    try {
+
+        client = await pool.connect()
+        const data = await client.query(queries.getAllAuthors);
+
+        result = data.rows;
+
+    } catch (error) {
+
+        console.log(error)
+        throw error
+
+    } finally {
+
+        client.release()
+
+    }
+
+    return result
+}
+
+//*CREAR AUTOR
+
+const creatNewAuththor = async (name, surname, email, image) => {
+
+    let client, result
+
+    try {
+
+        client = await pool.connect()
+        const data = await client.query(createAuthors, [name, surname, email, image])
+        result = data
+
+    } catch (error) {
+
+        console.log(error);
+        throw error
+
+    } finally {
+
+        client.release()
+
+    }
+    console.log(result);
+    return result
+}
 
 
-//* CREAR AUTOR
+//*ELIMINAR AUTOR
 
 
-//* ELIMINAR AUTOR
 
-
-//* ACTUALIZAR AUTOR
-
+//*ACTUALIZAR AUTOR
 
 
 
 
+module.exports = {
+
+    getAuthorsByEmail,
+    creatNewAuththor,
+    getAllAuthors
 
 
-// pool.connect((err, client, release) => {
-    
-//     if (err) {
-//         return console.error('Error acquiring client', err.stack)
-//     }
-//     client.query('SELECT NOW()', (err, result) => {
-//         release()
-//         if (err) {
-//             return console.error('Error executing query', err.stack)
-//         }
-//         console.log(result.rows)
-//     })
-// })
+}

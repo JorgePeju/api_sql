@@ -6,9 +6,9 @@ const {getEntries,deleteEntries, createEntries, updateEntries}=require('../contr
 
 
 router.get('/', getEntries)
-router.post('/', createEntries)
-router.delete('/:title', deleteEntries)
-router.put('/:title', updateEntries)
+router.post('/create', createEntries)
+// router.delete('/:title', deleteEntries)
+// router.put('/:title', updateEntries)
 
 
 
