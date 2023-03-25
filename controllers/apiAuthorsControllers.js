@@ -1,4 +1,4 @@
-const { getAuthorsByEmail, creatNewAuththor, getAllAuthors } = require('../models/author');
+const { getAuthorsByEmail, creatNewAuththor, getAllAuthors, deleteNewAuthor, updateNewAuthor } = require('../models/author');
 
 const getAuthors = async (req, res) => {
 
@@ -50,11 +50,48 @@ const createAuthor=async(req,res)=>{
     }
 }
 
+const deleteAuthor = async (req, res) => {
+
+    try {
+        const response = await deleteNewAuthor(params.id)
+
+        if (!response.ok) res.status(500).json(response);
+        else res.status(200).json(response);
+
+    } catch (e) {
+        res.status(500).json({
+            ok: false,
+            msg: 'error al borrar el autor'
+        })
+
+    }
+
+}
+
+const updateAuthor = async (req, res) => {
+
+    try {
+        const response = await updateNewAuthor(body, params.id);
+
+        if (!response.ok) res.status(500).json(response);
+        else res.status(200).json(response);
+
+    } catch (e) {
+        res.status(500).json({
+            ok: false,
+            msg: 'error al editar el autor'
+        })
+
+    }
+
+}
 module.exports= {
 
     createAuthor,
     getAuthors,
-    getAllAuthors
+    getAllAuthors,
+    deleteAuthor,
+    updateAuthor
 
 }
 

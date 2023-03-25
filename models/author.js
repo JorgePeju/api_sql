@@ -1,5 +1,7 @@
 const { Pool } = require('pg')
 
+const queries = require('./queries')
+
 const pool = new Pool({
     host: 'localhost',
     user: 'postgres',
@@ -16,7 +18,7 @@ const getAuthorsByEmail = async (email) => {
     try {
 
         client = await pool.connect()
-        const data = await client.query(queries.getAuthorByEmail, [email]);
+        const data = await client.query(queries.getAuthorsByEmail, [email]);
         //* si ponemos $2, $3, impedimos las inyecciones de SQL
         result = data.rows;
 
@@ -62,6 +64,7 @@ const getAllAuthors = async () => {
     }
 
     return result
+
 }
 
 //*CREAR AUTOR
@@ -93,10 +96,63 @@ const creatNewAuththor = async (name, surname, email, image) => {
 
 //*ELIMINAR AUTOR
 
+const deleteNewAuthor = async () => {
+
+    let client, result;
+    try {
+        client = await pool.connect();
+        result = await client.query(queries.deleteAuthor, [id]);
+
+    } catch (e) {
+        throw e
+    } finally {
+        client.release();
+    }
+
+    if (result.rowCount == 0) return {
+        ok: false,
+        data: {
+            msg: 'Error al eliminar autor.',
+            id,
+            rslt: result
+        }
+    }
+
+    return {
+        ok: true,
+        msg: `Autor Eliminado`
+    };
+}
 
 
-//*ACTUALIZAR AUTOR
+//* ACTUALIZAR UN AUTOR
 
+const updateNewAuthor= async ({ name, surname, email, image }, id) => {
+    let client, result;
+    try {
+        client = await pool.connect();
+        result = await client.query(queries.updateAuthor, [name, surname, email, image, id]);
+        
+    } catch (e) {
+        throw e
+    } finally {
+        client.release();
+    }
+
+    if (result.rowCount == 0) return {
+        ok: false,
+        data: {
+            msg: 'Error al editar el autor.',
+            id,
+            rslt: result
+        }
+    }
+
+    return {
+        ok: true,
+        msg: `Autor Editado`
+    };
+}
 
 
 
@@ -104,7 +160,7 @@ module.exports = {
 
     getAuthorsByEmail,
     creatNewAuththor,
-    getAllAuthors
-
-
+    getAllAuthors,
+    deleteNewAuthor,
+    updateNewAuthor
 }

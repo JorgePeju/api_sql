@@ -1,4 +1,4 @@
-const { getEntriesByEmail, getAllEntries, createNewEntries } = require('../models/entries')
+const { getEntriesByEmail, getAllEntries, createNewEntries, deleteNewEntrie, updateNewEntrie } = require('../models/entries')
 
 
 const getEntries = async (req, res) => {
@@ -57,32 +57,36 @@ const createEntries = async (req, res) => {
 const deleteEntries = async (req, res) => {
 
     try {
+        const response = await deleteNewEntrie(params.id)
 
+        if (!response.ok) res.status(500).json(response);
+        else res.status(200).json(response);
 
-        const url = `entries/${email}`;
-
-        const method = 'delete';
-
-        data = await eliminarEntrie(url, method);
-
-    } catch (error) {
-
+    } catch (e) {
         res.status(500).json({
             ok: false,
-            msg: 'error al eliminar los correos'
+            msg: 'error al borrar la entrada'
         })
 
     }
-
-
-
-    res.redirect('/api/entries');
 
 }
 
 const updateEntries = async (req, res) => {
 
+    try {
+        const response = await updateNewEntrie(body, params.id);
 
+        if (!response.ok) res.status(500).json(response);
+        else res.status(200).json(response);
+
+    } catch (e) {
+        res.status(500).json({
+            ok: false,
+            msg: 'error al editar la entrada'
+        })
+
+    }
 
 }
 
@@ -90,7 +94,7 @@ module.exports = {
 
     getEntries,
     createEntries,
-    //deleteEntries,
+    deleteEntries,
     updateEntries
 
 }

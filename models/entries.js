@@ -71,10 +71,8 @@ const getAllEntries = async () => {
 
 //* CREAR UNA ENTRADA
 
-
-
 const createNewEntries = async (dateEntries) => {
-    let { id_entry, title, content, date, id_author, category} = dateEntries;
+    let {title, content, date, id_author, category} = dateEntries;
 
     let client, result;
 
@@ -103,41 +101,71 @@ const createNewEntries = async (dateEntries) => {
 
 //* ELIMINAR UNA ENTRADA
 
-const eliminarEntrie = async () => {
+const deleteNewEntrie = async () => {
 
     let client, result;
-
     try {
-
-        client = await pool.connect()
-        const data = await client.query(queries.getEntriesByEmail, [email]);
-        //* si ponemos $2, $3, impedimos las inyecciones de SQL
-        result = data.rows;
-
-    } catch (error) {
-
-        console.log(error)
-        throw error
-
+        client = await pool.connect();
+        result = await client.query(queries.deleteEntries, [id]);
+        
+    } catch (e) {
+        throw e
     } finally {
-
-        client.release()
-
+        client.release();
     }
 
-    return result
+    if (result.rowCount == 0) return {
+        ok: false,
+        data: {
+            msg: 'Fallo al intentar eliminar  el registro.',
+            id,
+            result
+        }
+    }
+
+    return {
+        ok: true,
+        msg: `Entrie eliminada`
+    };
 }
+
 
 //* ACTUALIZAR UNA ENTRADA
 
+const updateNewEntrie= async ({ title, content, category }, id) => {
+    let client, result;
+    try {
+        client = await pool.connect();
+        result = await client.query(queries.updateEntrie, [title, content, category, id]);
+        
+    } catch (e) {
+        throw e
+    } finally {
+        client.release();
+    }
 
+    if (result.rowCount == 0) return {
+        ok: false,
+        data: {
+            msg: 'Fallo al intentar modificar el registro.',
+            id,
+            rslt: result
+        }
+    }
+
+    return {
+        ok: true,
+        msg: `Entrie modificado`
+    };
+}
 
 module.exports = {
 
     getEntriesByEmail,
     getAllEntries,
-    //eliminarEntrie,
-    createNewEntries
+    deleteNewEntrie,
+    createNewEntries,
+    updateNewEntrie
 
 }
 

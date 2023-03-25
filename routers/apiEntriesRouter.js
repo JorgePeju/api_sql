@@ -2,19 +2,13 @@ const express=require('express');
 
 const router = express.Router()
 
-const {getEntries,deleteEntries, createEntries, updateEntries}=require('../controllers/apiEntriesController')
+const {getEntries, deleteEntries, createEntries, updateEntries}=require('../controllers/apiEntriesController')
 
 
 router.get('/', getEntries)
 router.post('/create', createEntries)
-// router.delete('/:title', deleteEntries)
-// router.put('/:title', updateEntries)
-
-
-
-
-
-
+router.put('/edit/:id', updateEntries);
+router.delete('/delete/:id', deleteEntries);
 
 
 module.exports=router

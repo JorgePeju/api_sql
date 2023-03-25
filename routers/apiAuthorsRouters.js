@@ -3,11 +3,12 @@ const express=require('express');
 const router = express.Router();
 
 
-const {createAuthor, getAuthors } =require('../controllers/apiAuthorsControllers');
+const {createAuthor, getAuthors, updateAuthor, deleteAuthor } =require('../controllers/apiAuthorsControllers');
 
-router.get('/', getAuthors)
-router.post('/create', createAuthor)
-
+router.get('/', getAuthors);
+router.post('/create', createAuthor);
+router.put('/edit/:id', updateAuthor);
+router.delete('/delete/:id', deleteAuthor);
 
 
 
