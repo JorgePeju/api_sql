@@ -30,33 +30,35 @@ const queries = {
     `,
 
     createAuthors: `
-    INSERT INTO authors(name,surname,email,image)
-    VALUES ($1,$2,$3,$4);`,
+    INSERT INTO authors(name, surname, email, image)
+    VALUES ($1, $2, $3, $4);`,
 
     deleteEntries: `
     DELETE FROM entries 
-    WHERE id_entry = ($1);`,
+    WHERE id_entry = $1`,
 
     deleteAuthor: ` 
     DELETE FROM authors 
-    WHERE id_author = ($1);`,
+    WHERE id_author = $1;`,
 
-    updateEntrie: ` 
+    updateEntrie:`
     UPDATE entries 
     SET 
-        title = ($1),
-        content = ($2), 
-        category = ($3)
-    WHERE id_entry = ($4);`,
+        title = $2,
+        content = $3, 
+        date = $4,
+        id_author = $5,
+        category = $6
+    WHERE id_entry = $1;`,
 
     updateAuthor: ` 
     UPDATE authors 
     SET 
-        name = ($1),
-        surname = ($2),
-        email = ($3),
-        image = ($4)
-    WHERE id_author = ($5);`,
+        name = $2,
+        surname = $3, 
+        email = $4,
+        image = $5
+    WHERE id_author = $1;`,
 
 }
 

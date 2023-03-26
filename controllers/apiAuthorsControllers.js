@@ -1,4 +1,4 @@
-const { getAuthorsByEmail, creatNewAuththor, getAllAuthors, deleteNewAuthor, updateNewAuthor } = require('../models/author');
+const { getAuthorsByEmail, creatNewAuthor, getAllAuthors, deleteNewAuthor, updateNewAuthor } = require('../models/author');
 
 const getAuthors = async (req, res) => {
 
@@ -32,58 +32,73 @@ const createAuthor=async(req,res)=>{
 
    let newAuthor;
 
-    try {
+   try {
 
-        newAuthor= await creatNewAuththor(req.body);
+    newAuthor = await creatNewAuthor(req.body);
 
-        res.status(200).json({
-            ok:true,
-            data
-        })
+    res.status(200).json({
+        ok: true,
+        msg: 'Autor creado',
 
-    } catch (error) {
-
-        res.status(500).json({
-        ok:false,
-        msg:'error al crear el author'
     })
-    }
+
+} catch (error) {
+
+    res.status(500).json({
+        ok: false,
+        msg: 'error al crear el autor'
+    })
+
+}
+
 }
 
 const deleteAuthor = async (req, res) => {
 
+    let deleteAuthor = req.params.id; 
+
     try {
-        const response = await deleteNewAuthor(params.id)
 
-        if (!response.ok) res.status(500).json(response);
-        else res.status(200).json(response);
+        await deleteNewAuthor(deleteAuthor);
 
-    } catch (e) {
+        res.status(200).json({
+            ok: true,
+            msg: 'Entrada eliminada',
+        });
+        
+    } catch (error) {
+
+        console.log(error);
         res.status(500).json({
             ok: false,
-            msg: 'error al borrar el autor'
-        })
-
+            msg: 'error al borrar la entrada'
+        });
+        
     }
 
 }
 
 const updateAuthor = async (req, res) => {
 
+    let id = req.params.id; 
+    let editAuthor = req.body;
+
     try {
-        const response = await updateNewAuthor(body, params.id);
+        await updateNewAuthor(id, editAuthor); 
 
-        if (!response.ok) res.status(500).json(response);
-        else res.status(200).json(response);
+        res.status(200).json({
+            ok: true,
+            msg: 'Autor editada',
+        });
 
-    } catch (e) {
+    } catch (error) {
+
         res.status(500).json({
             ok: false,
-            msg: 'error al editar el autor'
+            msg: 'error al editar el/la autor'
         })
 
     }
-
 }
 module.exports= {
 

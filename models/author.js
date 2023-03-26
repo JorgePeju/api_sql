@@ -69,19 +69,19 @@ const getAllAuthors = async () => {
 
 //*CREAR AUTOR
 
-const creatNewAuththor = async (name, surname, email, image) => {
-
+const creatNewAuthor = async (newAuthor) => {
+    let {name, surname, email, image} = newAuthor
     let client, result
 
     try {
 
         client = await pool.connect()
-        const data = await client.query(createAuthors, [name, surname, email, image])
+        const data = await client.query(queries.createAuthors, [name, surname, email, image])
         result = data
 
     } catch (error) {
 
-        console.log(error);
+        console.log(error)
         throw error
 
     } finally {
@@ -89,69 +89,53 @@ const creatNewAuththor = async (name, surname, email, image) => {
         client.release()
 
     }
-    console.log(result);
+
     return result
 }
 
 
 //*ELIMINAR AUTOR
 
-const deleteNewAuthor = async () => {
-
+const deleteNewAuthor = async (id) => {
+    console.log('id:', id);
     let client, result;
     try {
         client = await pool.connect();
         result = await client.query(queries.deleteAuthor, [id]);
-
-    } catch (e) {
-        throw e
+        console.log(result.rowCount + ' autor eliminado');
+    } catch (error) {
+        console.log('Error al eliminar autor:', error);
+        throw error;
     } finally {
         client.release();
     }
-
-    if (result.rowCount == 0) return {
-        ok: false,
-        data: {
-            msg: 'Error al eliminar autor.',
-            id,
-            rslt: result
-        }
-    }
-
-    return {
-        ok: true,
-        msg: `Autor Eliminado`
-    };
+    return result;
 }
 
 
 //* ACTUALIZAR UN AUTOR
 
-const updateNewAuthor= async ({ name, surname, email, image }, id) => {
+const updateNewAuthor= async (id, editAuthor) => {
+    let { name, surname, email, image } = editAuthor;
+
     let client, result;
     try {
+
         client = await pool.connect();
-        result = await client.query(queries.updateAuthor, [name, surname, email, image, id]);
-        
-    } catch (e) {
-        throw e
+        result = await client.query(queries.updateAuthor, [id, name, surname, email, image ]);
+        console.log(result.rowCount + ' autor actualizada');
+    
+    } catch (error) {
+
+        console.log('Error al actualizar el autor:', error);
+        throw error;
+
     } finally {
+
         client.release();
+        
     }
-
-    if (result.rowCount == 0) return {
-        ok: false,
-        data: {
-            msg: 'Error al editar el autor.',
-            id,
-            rslt: result
-        }
-    }
-
-    return {
-        ok: true,
-        msg: `Autor Editado`
-    };
+    return result;
 }
 
 
@@ -159,7 +143,7 @@ const updateNewAuthor= async ({ name, surname, email, image }, id) => {
 module.exports = {
 
     getAuthorsByEmail,
-    creatNewAuththor,
+    creatNewAuthor,
     getAllAuthors,
     deleteNewAuthor,
     updateNewAuthor

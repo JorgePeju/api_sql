@@ -56,39 +56,48 @@ const createEntries = async (req, res) => {
 
 const deleteEntries = async (req, res) => {
 
+    let deleteEntrie = req.params.id; 
+
     try {
-        const response = await deleteNewEntrie(params.id)
+        await deleteNewEntrie(deleteEntrie);
 
-        if (!response.ok) res.status(500).json(response);
-        else res.status(200).json(response);
-
-    } catch (e) {
+        res.status(200).json({
+            ok: true,
+            msg: 'Entrada eliminada',
+        });
+        
+    } catch (error) {
+        console.log(error);
         res.status(500).json({
             ok: false,
             msg: 'error al borrar la entrada'
-        })
-
+        });
     }
-
 }
 
 const updateEntries = async (req, res) => {
+    
+    let id = req.params.id; 
+    let editEntrie = req.body;
 
     try {
-        const response = await updateNewEntrie(body, params.id);
+        await updateNewEntrie(id, editEntrie); 
 
-        if (!response.ok) res.status(500).json(response);
-        else res.status(200).json(response);
+        res.status(200).json({
+            ok: true,
+            msg: 'Entrada editada',
+        });
 
-    } catch (e) {
+    } catch (error) {
+
         res.status(500).json({
             ok: false,
             msg: 'error al editar la entrada'
         })
 
     }
-
 }
+
 
 module.exports = {
 

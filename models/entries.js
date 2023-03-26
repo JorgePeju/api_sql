@@ -101,63 +101,60 @@ const createNewEntries = async (dateEntries) => {
 
 //* ELIMINAR UNA ENTRADA
 
-const deleteNewEntrie = async () => {
+const deleteNewEntrie = async (id) => {
+
+    console.log('id:', id);
 
     let client, result;
+
     try {
+
         client = await pool.connect();
         result = await client.query(queries.deleteEntries, [id]);
-        
-    } catch (e) {
-        throw e
+        console.log(result.rowCount + ' entrada eliminada');
+
+    } catch (error) {
+
+        console.log('Error al eliminar la entrada:', error);
+        throw error;
+
     } finally {
+
         client.release();
+
     }
 
-    if (result.rowCount == 0) return {
-        ok: false,
-        data: {
-            msg: 'Fallo al intentar eliminar  el registro.',
-            id,
-            result
-        }
-    }
-
-    return {
-        ok: true,
-        msg: `Entrie eliminada`
-    };
+    return result;
 }
+
 
 
 //* ACTUALIZAR UNA ENTRADA
 
-const updateNewEntrie= async ({ title, content, category }, id) => {
+const updateNewEntrie = async (id, editEntrie) => {
+
+    let { title, content, date, id_author, category } = editEntrie;
+
     let client, result;
     try {
+
         client = await pool.connect();
-        result = await client.query(queries.updateEntrie, [title, content, category, id]);
-        
-    } catch (e) {
-        throw e
+        result = await client.query(queries.updateEntrie, [id, title, content, date, id_author, category]);
+        console.log(result.rowCount + ' entrada actualizada');
+    
+    } catch (error) {
+
+        console.log('Error al actualizar la entrada:', error);
+        throw error;
+
     } finally {
+
         client.release();
+        
     }
-
-    if (result.rowCount == 0) return {
-        ok: false,
-        data: {
-            msg: 'Fallo al intentar modificar el registro.',
-            id,
-            rslt: result
-        }
-    }
-
-    return {
-        ok: true,
-        msg: `Entrie modificado`
-    };
+    return result;
 }
+
 
 module.exports = {
 
