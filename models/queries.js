@@ -40,8 +40,12 @@ const queries = {
     deleteAuthor: ` 
     DELETE FROM authors 
     WHERE id_author = $1;`,
+    
+    deleteAuthorEntries: `
+    DELETE FROM entries 
+    WHERE id_author = $1;`,
 
-    updateEntrie:`
+    updateEntrie: `
     UPDATE entries 
     SET 
         title = $2,

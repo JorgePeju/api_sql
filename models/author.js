@@ -99,10 +99,15 @@ const creatNewAuthor = async (newAuthor) => {
 const deleteNewAuthor = async (id) => {
     console.log('id:', id);
     let client, result;
+
     try {
+
         client = await pool.connect();
-        result = await client.query(queries.deleteAuthor, [id]);
+        result = await client.query(queries.deleteAuthorEntries, [id]);
+        console.log(result.rowCount + ' entradas eliminadas');
+        result = await client.query(queries.deleteAuthor,[id]);
         console.log(result.rowCount + ' autor eliminado');
+        
     } catch (error) {
         console.log('Error al eliminar autor:', error);
         throw error;
